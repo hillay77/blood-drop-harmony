@@ -22,7 +22,7 @@ function DispatchPage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("dispatches")
-        .select("id, status, distance_km, eta_minutes, created_at, dispatched_at, delivered_at, hub:hubs(name, city), request:blood_requests(blood_group, rh, units_needed, urgency, hospital:hospitals(name, city))")
+        .select("id, status, distance_km, eta_minutes, created_at, dispatched_at, delivered_at, hub:hubs(name, region), request:blood_requests(blood_group, rh, units_needed, urgency, hospital:hospitals(name, region))")
         .order("created_at", { ascending: false })
         .limit(50);
       return data ?? [];
@@ -44,7 +44,7 @@ function DispatchPage() {
   const { data: hubs } = useQuery({
     queryKey: ["hubs-list"],
     queryFn: async () => {
-      const { data } = await supabase.from("hubs").select("id, name, city");
+      const { data } = await supabase.from("hubs").select("id, name, region");
       return data ?? [];
     },
   });
