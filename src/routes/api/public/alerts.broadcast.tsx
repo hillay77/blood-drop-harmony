@@ -18,16 +18,16 @@ export const Route = createFileRoute("/api/public/alerts/broadcast")({
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-        // Find matching opted-in donors
-        let q = supabaseAdmin.from("profiles").select("id, phone, phenotype_tags")
+        const { data: donors, error } = await supabaseAdmin
+          .from("profiles")
+          .select("id, phone, phenotype_tags")
           .eq("donor_opt_in", true).eq("blood_group", blood_group).eq("rh", rh)
           .not("phone", "is", null);
-        const { data: donors, error } = await q;
         if (error) return new Response(error.message, { status: 500 });
 
         const matches = (donors ?? []).filter((d: any) =>
           phenotype_required.length === 0 ||
-          phenotype_required.every((p) => (d.phenotype_tags ?? []).includes(p))
+          phenotype_required.every((p: string) => (d.phenotype_tags ?? []).includes(p))
         );
 
         const sid = process.env.TWILIO_ACCOUNT_SID;
@@ -38,7 +38,8 @@ export const Route = createFileRoute("/api/public/alerts/broadcast")({
         let queued = 0;
         for (const d of matches) {
           let status: "queued" | "sent" | "failed" = "queued";
-          let error_msg: string | null = null;
+          let twilio_sid: string | undefined;
+          let error_message: string | undefined;
           if (twilioReady && d.phone) {
             try {
               const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
@@ -49,15 +50,17 @@ export const Route = createFileRoute("/api/public/alerts/broadcast")({
                 },
                 body: new URLSearchParams({ To: d.phone, From: from!, Body: message }).toString(),
               });
-              if (!res.ok) { status = "failed"; error_msg = await res.text(); }
-              else status = "sent";
-            } catch (e: any) { status = "failed"; error_msg = e?.message ?? "send_failed"; }
+              if (!res.ok) { status = "failed"; error_message = await res.text(); }
+              else { status = "sent"; const j: any = await res.json().catch(() => ({})); twilio_sid = j?.sid; }
+            } catch (e: any) { status = "failed"; error_message = e?.message ?? "send_failed"; }
           }
           await supabaseAdmin.from("match_alerts").insert({
-            recipient_profile_id: d.id, blood_group, rh,
-            phenotype_required, message, status,
-            sent_at: status === "sent" ? new Date().toISOString() : null,
-            error_message: error_msg,
+            donor_id: d.id,
+            phone: d.phone!,
+            message: `[${blood_group}${rh === "positive" ? "+" : "-"}${phenotype_required.length ? " · " + phenotype_required.join(",") : ""}] ${message}`,
+            status,
+            twilio_sid,
+            error_message,
           });
           queued++;
         }

@@ -18,7 +18,7 @@ function Dashboard() {
         supabase.from("blood_units").select("id, blood_group, rh, status", { count: "exact" }).eq("status", "available"),
         supabase.from("blood_requests").select("id", { count: "exact", head: true }).in("status", ["pending", "matched"]),
         supabase.from("shortage_forecasts").select("id, blood_group, rh, projected_days_remaining, shortage_risk").in("shortage_risk", ["high", "critical"]),
-        supabase.from("cold_chain_readings").select("id", { count: "exact", head: true }).eq("alert_triggered", true),
+        supabase.from("cold_chain_readings").select("id", { count: "exact", head: true }).eq("is_alert", true),
       ]);
       const byGroup: Record<string, number> = {};
       (units.data ?? []).forEach((u) => {

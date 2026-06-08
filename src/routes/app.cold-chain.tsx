@@ -16,7 +16,7 @@ function ColdChainPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("cold_chain_readings")
-        .select("id, hub_id, storage_unit, temperature_c, recorded_at, alert_triggered, hub:hubs(name)")
+        .select("id, hub_id, storage_unit, temp_c, recorded_at, is_alert, hub:hubs(name)")
         .order("recorded_at", { ascending: false })
         .limit(500);
       if (error) throw error;
@@ -24,18 +24,17 @@ function ColdChainPage() {
     },
   });
 
-  // Group readings by hub for chart
   const series = (() => {
     const map = new Map<string, { name: string; readings: any[] }>();
     (data ?? []).slice().reverse().forEach((r: any) => {
       const key = `${r.hub?.name ?? "Hub"} · ${r.storage_unit}`;
       if (!map.has(key)) map.set(key, { name: key, readings: [] });
-      map.get(key)!.readings.push({ t: new Date(r.recorded_at).toLocaleString(), temp: r.temperature_c });
+      map.get(key)!.readings.push({ t: new Date(r.recorded_at).toLocaleString(), temp: Number(r.temp_c) });
     });
     return Array.from(map.values()).slice(0, 4);
   })();
 
-  const alerts = (data ?? []).filter((r: any) => r.alert_triggered).slice(0, 20);
+  const alerts = (data ?? []).filter((r: any) => r.is_alert).slice(0, 20);
 
   return (
     <div className="space-y-6">
@@ -79,7 +78,7 @@ function ColdChainPage() {
                     <div className="text-sm font-medium">{a.hub?.name} · {a.storage_unit}</div>
                     <div className="text-xs text-muted-foreground">{new Date(a.recorded_at).toLocaleString()}</div>
                   </div>
-                  <Badge variant="destructive">{a.temperature_c}°C</Badge>
+                  <Badge variant="destructive">{a.temp_c}°C</Badge>
                 </div>
               ))}
             </div>
