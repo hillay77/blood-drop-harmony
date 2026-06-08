@@ -14,8 +14,10 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppRequestsRouteImport } from './routes/app.requests'
+import { Route as AppReportsRouteImport } from './routes/app.reports'
 import { Route as AppInventoryRouteImport } from './routes/app.inventory'
 import { Route as AppForecastsRouteImport } from './routes/app.forecasts'
+import { Route as AppDispatchRouteImport } from './routes/app.dispatch'
 import { Route as AppColdChainRouteImport } from './routes/app.cold-chain'
 import { Route as AppAlertsRouteImport } from './routes/app.alerts'
 import { Route as ApiPublicCronRefreshForecastsRouteImport } from './routes/api/public/cron.refresh-forecasts'
@@ -46,6 +48,11 @@ const AppRequestsRoute = AppRequestsRouteImport.update({
   path: '/requests',
   getParentRoute: () => AppRoute,
 } as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppInventoryRoute = AppInventoryRouteImport.update({
   id: '/inventory',
   path: '/inventory',
@@ -54,6 +61,11 @@ const AppInventoryRoute = AppInventoryRouteImport.update({
 const AppForecastsRoute = AppForecastsRouteImport.update({
   id: '/forecasts',
   path: '/forecasts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDispatchRoute = AppDispatchRouteImport.update({
+  id: '/dispatch',
+  path: '/dispatch',
   getParentRoute: () => AppRoute,
 } as any)
 const AppColdChainRoute = AppColdChainRouteImport.update({
@@ -85,8 +97,10 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/app/alerts': typeof AppAlertsRoute
   '/app/cold-chain': typeof AppColdChainRoute
+  '/app/dispatch': typeof AppDispatchRoute
   '/app/forecasts': typeof AppForecastsRoute
   '/app/inventory': typeof AppInventoryRoute
+  '/app/reports': typeof AppReportsRoute
   '/app/requests': typeof AppRequestsRoute
   '/app/': typeof AppIndexRoute
   '/api/public/alerts/broadcast': typeof ApiPublicAlertsBroadcastRoute
@@ -97,8 +111,10 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/app/alerts': typeof AppAlertsRoute
   '/app/cold-chain': typeof AppColdChainRoute
+  '/app/dispatch': typeof AppDispatchRoute
   '/app/forecasts': typeof AppForecastsRoute
   '/app/inventory': typeof AppInventoryRoute
+  '/app/reports': typeof AppReportsRoute
   '/app/requests': typeof AppRequestsRoute
   '/app': typeof AppIndexRoute
   '/api/public/alerts/broadcast': typeof ApiPublicAlertsBroadcastRoute
@@ -111,8 +127,10 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/app/alerts': typeof AppAlertsRoute
   '/app/cold-chain': typeof AppColdChainRoute
+  '/app/dispatch': typeof AppDispatchRoute
   '/app/forecasts': typeof AppForecastsRoute
   '/app/inventory': typeof AppInventoryRoute
+  '/app/reports': typeof AppReportsRoute
   '/app/requests': typeof AppRequestsRoute
   '/app/': typeof AppIndexRoute
   '/api/public/alerts/broadcast': typeof ApiPublicAlertsBroadcastRoute
@@ -126,8 +144,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/app/alerts'
     | '/app/cold-chain'
+    | '/app/dispatch'
     | '/app/forecasts'
     | '/app/inventory'
+    | '/app/reports'
     | '/app/requests'
     | '/app/'
     | '/api/public/alerts/broadcast'
@@ -138,8 +158,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/app/alerts'
     | '/app/cold-chain'
+    | '/app/dispatch'
     | '/app/forecasts'
     | '/app/inventory'
+    | '/app/reports'
     | '/app/requests'
     | '/app'
     | '/api/public/alerts/broadcast'
@@ -151,8 +173,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/app/alerts'
     | '/app/cold-chain'
+    | '/app/dispatch'
     | '/app/forecasts'
     | '/app/inventory'
+    | '/app/reports'
     | '/app/requests'
     | '/app/'
     | '/api/public/alerts/broadcast'
@@ -204,6 +228,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRequestsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/reports': {
+      id: '/app/reports'
+      path: '/reports'
+      fullPath: '/app/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/inventory': {
       id: '/app/inventory'
       path: '/inventory'
@@ -216,6 +247,13 @@ declare module '@tanstack/react-router' {
       path: '/forecasts'
       fullPath: '/app/forecasts'
       preLoaderRoute: typeof AppForecastsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dispatch': {
+      id: '/app/dispatch'
+      path: '/dispatch'
+      fullPath: '/app/dispatch'
+      preLoaderRoute: typeof AppDispatchRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/cold-chain': {
@@ -252,8 +290,10 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppAlertsRoute: typeof AppAlertsRoute
   AppColdChainRoute: typeof AppColdChainRoute
+  AppDispatchRoute: typeof AppDispatchRoute
   AppForecastsRoute: typeof AppForecastsRoute
   AppInventoryRoute: typeof AppInventoryRoute
+  AppReportsRoute: typeof AppReportsRoute
   AppRequestsRoute: typeof AppRequestsRoute
   AppIndexRoute: typeof AppIndexRoute
 }
@@ -261,8 +301,10 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppAlertsRoute: AppAlertsRoute,
   AppColdChainRoute: AppColdChainRoute,
+  AppDispatchRoute: AppDispatchRoute,
   AppForecastsRoute: AppForecastsRoute,
   AppInventoryRoute: AppInventoryRoute,
+  AppReportsRoute: AppReportsRoute,
   AppRequestsRoute: AppRequestsRoute,
   AppIndexRoute: AppIndexRoute,
 }

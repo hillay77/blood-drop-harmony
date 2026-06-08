@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Droplets, LayoutDashboard, Boxes, Snowflake, TrendingDown, Ambulance, Radio, LogOut } from "lucide-react";
+import { Droplets, LayoutDashboard, Boxes, Snowflake, TrendingDown, Ambulance, Radio, LogOut, Siren, BarChart3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -7,12 +7,14 @@ import type { ReactNode } from "react";
 
 type NavItem = { to: string; label: string; icon: typeof Droplets; exact?: boolean };
 const nav: NavItem[] = [
-  { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/app/inventory", label: "Inventory", icon: Boxes },
+  { to: "/app", label: "National Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/app/inventory", label: "Blood Stock", icon: Boxes },
   { to: "/app/cold-chain", label: "Cold Chain", icon: Snowflake },
-  { to: "/app/forecasts", label: "Forecasts", icon: TrendingDown },
-  { to: "/app/requests", label: "Requests", icon: Ambulance },
+  { to: "/app/forecasts", label: "Forecasts & Shortages", icon: TrendingDown },
+  { to: "/app/requests", label: "Hospital Requests", icon: Ambulance },
+  { to: "/app/dispatch", label: "Emergency Dispatch", icon: Siren },
   { to: "/app/alerts", label: "SMS Alerts", icon: Radio },
+  { to: "/app/reports", label: "Reports", icon: BarChart3 },
 ];
 
 export function AppShell({ children, email }: { children: ReactNode; email?: string | null }) {
