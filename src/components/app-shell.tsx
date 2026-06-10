@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
-type NavItem = { to: string; label: string; icon: typeof Droplets; exact?: boolean };
+type NavItem = { to: string; label: string; icon: typeof Droplets; exact?: boolean; adminOnly?: boolean };
 const nav: NavItem[] = [
   { to: "/app", label: "National Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/app/inventory", label: "Blood Stock", icon: Boxes },
@@ -15,10 +15,12 @@ const nav: NavItem[] = [
   { to: "/app/dispatch", label: "Emergency Dispatch", icon: Siren },
   { to: "/app/alerts", label: "SMS Alerts", icon: Radio },
   { to: "/app/reports", label: "Reports", icon: BarChart3 },
-  { to: "/app/settings", label: "Settings", icon: Settings },
+  { to: "/app/settings", label: "Settings", icon: Settings, adminOnly: true },
 ];
 
-export function AppShell({ children, email }: { children: ReactNode; email?: string | null }) {
+export function AppShell({ children, email, roles = [] }: { children: ReactNode; email?: string | null; roles?: string[] }) {
+  const isAdmin = roles.includes("admin");
+  const visibleNav = nav.filter((n) => !n.adminOnly || isAdmin);
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
 
