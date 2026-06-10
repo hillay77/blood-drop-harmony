@@ -39,7 +39,7 @@ export function AppShell({ children, email, roles = [] }: { children: ReactNode;
           <span className="font-display font-bold">Nakandulo</span>
         </div>
         <nav className="flex-1 p-3 space-y-1">
-          {nav.map(({ to, label, icon: Icon, exact }: NavItem) => {
+          {visibleNav.map(({ to, label, icon: Icon, exact }: NavItem) => {
             const active = exact ? path === to : path.startsWith(to);
             return (
               <Link key={to} to={to} className={cn(
