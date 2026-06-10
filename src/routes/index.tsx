@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Activity, Droplets, Snowflake, Radio, ShieldCheck, TrendingDown } from "lucide-react";
+import { Activity, Droplets, Snowflake, Radio, TrendingDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
@@ -18,7 +18,7 @@ const features = [
   { icon: Snowflake, title: "Cold-Chain Monitoring", desc: "Continuous storage temperature readings with depletion-risk alerts." },
   { icon: Activity, title: "Emergency Dispatch", desc: "FEFO matching and haversine routing between hospitals and donor hubs." },
   { icon: Radio, title: "Rare-Phenotype SMS", desc: "Automated Twilio alerts to opted-in donors when rare matches are needed." },
-  { icon: ShieldCheck, title: "Role-Based Security", desc: "Row-level security for admins, hub staff, hospitals, and donors." },
+  
 ];
 
 function Landing() {
